@@ -84,6 +84,10 @@ def ic():
         global hi
         hi=ImageTk.PhotoImage(rs)
         my_label=Label(Area,image=hi).place(x=1,y=0)
+        
+ def saves():
+        global rs
+        rs= rs.save("save1.png")
 
 
 top = tkinter.Tk()
@@ -103,7 +107,7 @@ Space.grid(row = 0, column = 0)
 openB = tkinter.Button(top, text='Open', width=8, background="#545451", foreground="white", borderwidth=2, font="calibri", command=open_file)
 openB.grid(row = 1, column = 0, sticky = W, pady = 8, padx = 7, ipadx=5)
 
-saveB = tkinter.Button(top, text='Save', width=9, background="#545451", foreground="white", borderwidth=2, font="calibri")
+saveB = tkinter.Button(top, text='Save', width=9, background="#545451", foreground="white", borderwidth=2, font="calibri", command=saves)
 saveB.grid(row = 1, column = 1, sticky = W, pady = 8, padx = 7, ipadx=5)
 
 CropB = tkinter.Button(top, text='Crop', width=8, background="#545451", foreground="white", borderwidth=2, font="calibri")
