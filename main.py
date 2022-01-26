@@ -88,6 +88,7 @@ def ic():
 def saves():
         global rs
         rs= rs.save("save1.jpg")
+        
 def crops():
         global rs
         rs = rs.crop((1,2,300,300))
