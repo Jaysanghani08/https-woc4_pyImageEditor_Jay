@@ -3,60 +3,60 @@ from tkinter import *
 import tkinter
 import tkinter.filedialog 
 from tkinter.ttk import *
-from turtle import bgcolor, width
-from PIL import Image, ImageTk, ImageChops
-from numpy import *
+from PIL import Image, ImageTk,ImageChops,ImageOps
 import ctypes
-
-
 ctypes.windll.shcore.SetProcessDpiAwareness(2)
-ct = 2
-bt = 2 
-bc = 4
-w=1030
-h=580
+
+bc=2
+ivcc=2
 
 def open_file():
-    global img
-    global im
-    global my_label
-    global rs
-    top.filename = tkinter.filedialog.askopenfilename( title="Open Your Image" ,filetypes=(("png files", "*.png"), ("jpg files", "*.jpg"), ("jpeg files", "*.jpeg")))
-    im = Image.open(top.filename)
-    rs = im.resize((w,h))
-    img = ImageTk.PhotoImage(rs)
-    my_label = Label(Area, image=img).place(x=1, y=0)
+    global img1,realimg,rs
+    top.img1=tkinter.filedialog.askopenfilename(filetypes=( ("jpg files", "*.jpg"), ("png files", "*.png"),("jpeg files", "*.jpeg")))
+    realimg=Image.open(top.img1)
+    rs=realimg.resize((1030,580))
+    global tki
+    tki=ImageTk.PhotoImage(rs)
+    global yechap
+    yechap=Label(Area,image=tki).place(x=1,y=0)
+
+
 
 def fi():
+   
         global rs
         rs=rs.transpose(Image.FLIP_LEFT_RIGHT)
         global hi
         hi=ImageTk.PhotoImage(rs)
-        my_label=Label(Area,image=hi).place(x=1,y=0)
-       
+        yechap=Label(Area,image=hi).place(x=1,y=0)
+    
+ 
+
 def vi():
+    
         global rs
         rs=rs.transpose(Image.FLIP_TOP_BOTTOM)
         global hi
         hi=ImageTk.PhotoImage(rs)
-        my_label=Label(Area,image=hi).place(x=1,y=0)
+        yechap=Label(Area,image=hi).place(x=1,y=0)
      
-def rr():
-        global rs
-        rs=rs.transpose(Image.ROTATE_270)
-        rs = rs.resize((w,h))
-        global hi
-        hi=ImageTk.PhotoImage(rs)
-        my_label=Label(Area,image=hi).place(x=1,y=0)
-    
+
 def rl():
         global rs
         rs=rs.transpose(Image.ROTATE_90)
-        rs = rs.resize((w,h))
         global hi
+        rs=rs.resize((1030,580))
         hi=ImageTk.PhotoImage(rs)
-        my_label=Label(Area,image=hi).place(x=1,y=0)
-    
+        yechap=Label(Area,image=hi).place(x=1,y=0)
+      
+def rr():
+        global rs
+        rs=rs.transpose(Image.ROTATE_270)
+        global hi
+        rs=rs.resize((1030,580))
+        hi=ImageTk.PhotoImage(rs)
+        yechap=Label(Area,image=hi).place(x=1,y=0)
+
 def bnw():
         global bc
         if bc%2==0:
@@ -67,15 +67,15 @@ def bnw():
                 bcha=bcha.convert("L")
                 global hi
                 hi=ImageTk.PhotoImage(bcha)
-                my_label=Label(Area,image=hi).place(x=1,y=0)
+                yechap=Label(Area,image=hi).place(x=1,y=0)
         else:
                 hi=ImageTk.PhotoImage(rs)
-                my_label=Label(Area,image=hi).place(x=1,y=0)
+                yechap=Label(Area,image=hi).place(x=1,y=0)
                 bc=2
-
 def ic():
         global rs
         pixels = rs.load()
+
         for i in range(rs.size[0]):
                 for j in range(rs.size[1]):
                         x,y,z = pixels[i,j][0],pixels[i,j][1],pixels[i,j][2]
@@ -83,12 +83,18 @@ def ic():
                         pixels[i,j] = (x,y,z)
         global hi
         hi=ImageTk.PhotoImage(rs)
-        my_label=Label(Area,image=hi).place(x=1,y=0)
-        
- def saves():
+        yechap=Label(Area,image=hi).place(x=1,y=0)
+    
+def saves():
         global rs
-        rs= rs.save("save1.png")
-
+        rs= rs.save("save1.jpg")
+def crops():
+        global rs
+        rs = rs.crop((1,2,300,300))
+        rs=rs.resize((1030, 580))
+        global hi
+        hi=ImageTk.PhotoImage(rs)
+        yechap=Label(Area,image=hi).place(x=1,y=0)
 
 top = tkinter.Tk()
 top.title("My Image Editor")
@@ -110,7 +116,7 @@ openB.grid(row = 1, column = 0, sticky = W, pady = 8, padx = 7, ipadx=5)
 saveB = tkinter.Button(top, text='Save', width=9, background="#545451", foreground="white", borderwidth=2, font="calibri", command=saves)
 saveB.grid(row = 1, column = 1, sticky = W, pady = 8, padx = 7, ipadx=5)
 
-CropB = tkinter.Button(top, text='Crop', width=8, background="#545451", foreground="white", borderwidth=2, font="calibri")
+CropB = tkinter.Button(top, text='Crop', width=8, background="#545451", foreground="white", borderwidth=2, font="calibri", command=crops)
 CropB.grid(row = 2, column = 0, sticky = W, pady = 1, padx = 7, ipadx=5)
 
 Rotate_LeftB = tkinter.Button(top, text='Rotate Left', width=8, background="#545451", foreground="white", borderwidth=2, font="calibri", command=rl)
@@ -131,8 +137,13 @@ BnWB.grid(row = 5, column = 0, sticky = W, pady = 1, padx = 7, ipadx=5)
 InCB = tkinter.Button(top, text='Invert colours', width=12, background="#545451", foreground="white", borderwidth=2, font="calibri", command=ic)
 InCB.grid(row = 6, column = 0, sticky = W, pady = 1, padx = 7, ipadx=5)
 
-Area = Canvas( top,  width=w, height=h)
+Area = Canvas( top,  width=1030, height=580)
 Area.grid(row=1, column=4, rowspan=10)
+
+   
+
+
+
 
 #Brightness
 # Bscale = Scale(top, variable = Brightness, from_ = -100, to = 100, orient = HORIZONTAL)
